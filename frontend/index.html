@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>security_manager</title>
+</head>
+<body>
+<div id="app">
+    <h2>Checkbox Form</h2>
+    <form id="checkboxForm">
+        <label>
+            <input type="checkbox" id="noAutoUpdates"> Disable Auto Updates
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="disableCmd"> Disable Access to Command Prompt
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="disableDownloads"> Disable File Downloads in Chrome and Edge
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="disableFacebook"> Block Access to facebook.com
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="changeScreenTimeout"> Set Lock Screen Timeout to 3 minutes
+        </label>
+        <br>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+    <div id="message" class="message"></div>
+</div>
+<script src="./src/main.js" type="module"></script>
+</body>
+</html>
