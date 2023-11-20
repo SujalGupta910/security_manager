@@ -63,8 +63,14 @@ func WindowsUpdatesHandler() error {
 	// Open the registry key for writing
 	key, err := registry.OpenKey(registry.LOCAL_MACHINE, keyPath, registry.SET_VALUE)
 	if err != nil {
-		fmt.Println("Error opening registry key:", err)
-		return err
+		// If the key doesn't exist, create it
+		key, _, err = registry.CreateKey(registry.CURRENT_USER, keyPath, registry.ALL_ACCESS)
+		if err != nil {
+			fmt.Printf("Error creating or opening registry key: %v\n", err)
+			return err
+		}
+		defer key.Close()
+		fmt.Println("Parent registry key created.")
 	}
 	defer key.Close()
 
@@ -84,6 +90,63 @@ func WindowsUpdatesHandler() error {
 	fmt.Println("Automatic Windows updates disabled. Please restart your system for changes to take effect.")
 	return nil
 }
+func DownloadsHandler() error {
+	valueName := "DownloadRestrictions"
+	valueData := 3
+
+	//Chrome
+	chromeKeyPath := `Software\Policies\Google\Chrome`
+	chromeKey, err := registry.OpenKey(registry.CURRENT_USER, chromeKeyPath, registry.ALL_ACCESS)
+	if err != nil {
+		chromeKey, _, err = registry.CreateKey(registry.CURRENT_USER, chromeKeyPath, registry.ALL_ACCESS)
+		if err != nil {
+			fmt.Printf("Error creating or opening registry key: %v\n", err)
+			return err
+		}
+		defer chromeKey.Close()
+		fmt.Println("Parent registry key created.")
+	} else {
+		defer chromeKey.Close()
+		fmt.Println("Parent registry key opened.")
+	}
+	err = chromeKey.SetDWordValue(valueName, uint32(valueData))
+	if err != nil {
+		fmt.Printf("Error writing registry value: %v\n", err)
+		return err
+	}
+	fmt.Printf("Registry value %s set to %d\n", valueName, valueData)
+
+	//Edge
+	edgeKeyPath := `Software\Policies\Microsoft\Edge`
+	edgeKey, err := registry.OpenKey(registry.CURRENT_USER, edgeKeyPath, registry.ALL_ACCESS)
+	if err != nil {
+		// If the key doesn't exist, create it
+		edgeKey, _, err = registry.CreateKey(registry.CURRENT_USER, edgeKeyPath, registry.ALL_ACCESS)
+		if err != nil {
+			fmt.Printf("Error creating or opening registry key: %v\n", err)
+			return err
+		}
+		defer edgeKey.Close()
+		fmt.Println("Parent registry key created.")
+	} else {
+		defer edgeKey.Close()
+		fmt.Println("Parent registry key opened.")
+	}
+	err = edgeKey.SetDWordValue(valueName, uint32(valueData))
+	if err != nil {
+		fmt.Printf("Error writing registry value: %v\n", err)
+		return err
+	}
+	fmt.Printf("Registry value %s set to %d\n", valueName, valueData)
+
+	return nil
+}
+func FacebookHandler() error {
+	return nil
+}
+func ScreenTimeoutHandler() error {
+	return nil
+}
 
 func (a *App) DisableWindowsUpdates() (string, error) {
 	err := WindowsUpdatesHandler()
@@ -100,11 +163,23 @@ func (a *App) DisableCmd() (string, error) {
 	return "Cmd access disabled Successfully", nil
 }
 func (a *App) DisableDownloads() (string, error) {
+	err := DownloadsHandler()
+	if err != nil {
+		return "", err
+	}
 	return "Downloads in Chrome and Edge Disabled Successfully", nil
 }
 func (a *App) DisableFacebook() (string, error) {
+	err := FacebookHandler()
+	if err != nil {
+		return "", err
+	}
 	return "Access to Facebook Disabled Successfully", nil
 }
 func (a *App) ChangeScreenTimeout() (string, error) {
+	err := ScreenTimeoutHandler()
+	if err != nil {
+		return "", err
+	}
 	return "Screen Timeout chnaged to 3 minutes", nil
 }
