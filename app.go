@@ -25,7 +25,7 @@ func (a *App) DisableWindowsUpdates() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return "Disabled Auto Udates Successfully", nil
+	return "Disabled Auto Udates Successfully. Please restart your computer.", nil
 }
 func (a *App) DisableCmd() (string, error) {
 	err := CmdHandler()
@@ -46,12 +46,12 @@ func (a *App) DisableFacebook() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return "Access to Facebook Disabled Successfully", nil
+	return "Access to Facebook Disabled Successfully. Please restart your computer.", nil
 }
 func (a *App) ChangeScreenTimeout() (string, error) {
 	err := ScreenTimeoutHandler(uint(180))
 	if err != nil {
 		return "", err
 	}
-	return "Screen Timeout chnaged to 3 minutes", nil
+	return "Screen Timeout chnaged to 3 minutes. Please restart your computer.", nil
 }

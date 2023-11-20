@@ -6,33 +6,49 @@
     <title>security_manager</title>
 </head>
 <body>
-<div id="app">
-    <h2>Checkbox Form</h2>
-    <form id="checkboxForm">
-        <label>
-            <input type="checkbox" id="noAutoUpdates"> Disable Auto Updates
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" id="disableCmd"> Disable Access to Command Prompt
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" id="disableDownloads"> Disable File Downloads in Chrome and Edge
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" id="disableFacebook"> Block Access to facebook.com
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" id="changeScreenTimeout"> Set Lock Screen Timeout to 3 minutes
-        </label>
-        <br>
-        <button type="button" onclick="submitForm()">Submit</button>
-    </form>
-    <div id="message" class="message"></div>
-</div>
-<script src="./src/main.js" type="module"></script>
+
+    <div id="menu">
+        <ul>
+            <li onclick="showPage('users')">Users</li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <div id="users">
+            <div class="user-icon" onclick="showUserDetails('user1')"><img src=".\src\assets\images\Sample_User_Icon.png" alt="User Image"></div>
+        </div>
+
+        <div id="userDetails">
+            <h2>Security Manager</h2>
+            <label class="checkbox-label">
+                <input type="checkbox" id="noAutoUpdates"> Disable Auto Updates
+            </label>
+            <br>
+            <label class="checkbox-label">
+                <input type="checkbox" id="disableCmd"> Disable Access to Command Prompt
+            </label>
+            <br>
+            <label class="checkbox-label">
+                <input type="checkbox" id="disableDownloads"> Disable File Downloads in Chrome and Edge
+            </label>
+            <br>
+            <label class="checkbox-label">
+                <input type="checkbox" id="disableFacebook"> Block Access to facebook.com
+            </label>
+            <br>
+            <label class="checkbox-label">
+                <input type="checkbox" id="changeScreenTimeout"> Set Lock Screen Timeout to 3 minutes
+            </label>
+            <br>
+            <button type="button" onclick="submitForm()">Submit</button>
+            <br>
+            <div id="outputContainer">
+
+            </div>
+        </div>
+    </div>
+
+    <script src="./src/main.js" type="module"></script>
+
 </body>
 </html>

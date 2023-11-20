@@ -4,20 +4,17 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"syscall"
+	"os/exec"
 
 	"golang.org/x/sys/windows/registry"
 )
 
 // CmdHandler handles the Wails command to disable access to cmd
 func CmdHandler() error {
-	// Define the registry key path
 	keyPath := `Software\Policies\Microsoft\Windows\System`
 
-	// Open or create a registry key for writing
 	key, err := registry.OpenKey(registry.CURRENT_USER, keyPath, registry.ALL_ACCESS)
 	if err != nil {
-		// If the key doesn't exist, create it
 		key, _, err = registry.CreateKey(registry.CURRENT_USER, keyPath, registry.ALL_ACCESS)
 		if err != nil {
 			fmt.Printf("Error creating or opening registry key: %v\n", err)
@@ -30,7 +27,6 @@ func CmdHandler() error {
 		fmt.Println("Parent registry key opened.")
 	}
 
-	// Write a registry value
 	valueName := "DisableCMD"
 	valueData := 1
 
@@ -43,13 +39,10 @@ func CmdHandler() error {
 	return nil
 }
 func WindowsUpdatesHandler() error {
-	// Specify the registry key for Windows Update settings
 	keyPath := `SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU`
 
-	// Open the registry key for writing
 	key, err := registry.OpenKey(registry.LOCAL_MACHINE, keyPath, registry.SET_VALUE)
 	if err != nil {
-		// If the key doesn't exist, create it
 		key, _, err = registry.CreateKey(registry.CURRENT_USER, keyPath, registry.ALL_ACCESS)
 		if err != nil {
 			fmt.Printf("Error creating or opening registry key: %v\n", err)
@@ -60,7 +53,6 @@ func WindowsUpdatesHandler() error {
 	}
 	defer key.Close()
 
-	// Set the registry values to disable automatic updates
 	err = key.SetDWordValue("NoAutoUpdate", 1)
 	if err != nil {
 		fmt.Println("Error setting registry value:", err)
@@ -106,7 +98,6 @@ func DownloadsHandler() error {
 	edgeKeyPath := `Software\Policies\Microsoft\Edge`
 	edgeKey, err := registry.OpenKey(registry.CURRENT_USER, edgeKeyPath, registry.ALL_ACCESS)
 	if err != nil {
-		// If the key doesn't exist, create it
 		edgeKey, _, err = registry.CreateKey(registry.CURRENT_USER, edgeKeyPath, registry.ALL_ACCESS)
 		if err != nil {
 			fmt.Printf("Error creating or opening registry key: %v\n", err)
@@ -139,14 +130,20 @@ func FacebookHandler(website string) error {
 	// Check if the entry already exists in the hosts file
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		if scanner.Text() == "127.0.0.1\t"+website {
+		if scanner.Text() == "127.0.0.1 "+website {
 			fmt.Printf("%s is already blocked.\n", website)
 			return nil
 		}
 	}
 
-	// If the entry doesn't exist, add it to the hosts file
-	_, err = file.WriteString("127.0.0.1\t" + website + "\n")
+	newLine := "\n127.0.0.1 " + website
+	_, err = fmt.Fprintln(file, newLine)
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command("ipconfig", "/flushdns")
+	err = cmd.Run()
 	if err != nil {
 		return err
 	}
@@ -155,23 +152,26 @@ func FacebookHandler(website string) error {
 	return nil
 }
 func ScreenTimeoutHandler(timeout uint) error {
-	const (
-		SPI_SETSCREENSAVETIMEOUT = 15
-	)
+	keyPath := `SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System`
 
-	var (
-		user32               = syscall.NewLazyDLL("user32.dll")
-		systemParametersInfo = user32.NewProc("SystemParametersInfoW")
-	)
+	key, err := registry.OpenKey(registry.LOCAL_MACHINE, keyPath, registry.SET_VALUE)
+	if err != nil {
+		key, _, err = registry.CreateKey(registry.LOCAL_MACHINE, keyPath, registry.ALL_ACCESS)
+		if err != nil {
+			fmt.Printf("Error creating or opening registry key: %v\n", err)
+			return err
+		}
+		defer key.Close()
+		fmt.Println("Parent registry key created.")
+	}
+	defer key.Close()
 
-	success, _, err := systemParametersInfo.Call(
-		uintptr(SPI_SETSCREENSAVETIMEOUT),
-		uintptr(timeout),
-		0,
-		0,
-	)
-	if success == 0 {
+	err = key.SetDWordValue("InactivityTimeoutSecs", uint32(180))
+	if err != nil {
+		fmt.Println("Error setting registry value:", err)
 		return err
 	}
+
+	fmt.Println("Lock Screen Timeout changed. Please restart your system for changes to take effect.")
 	return nil
 }

@@ -3,136 +3,123 @@ import './app.css';
 
 import {DisableWindowsUpdates,DisableCmd, DisableDownloads, DisableFacebook, ChangeScreenTimeout} from '../wailsjs/go/main/App';
 
-// Setup the greet function
+window.showPage = function (page) {
+    document.getElementById('users').style.display = 'none';
+    document.getElementById('userDetails').style.display = 'none';
+    document.getElementById(page).style.display = 'block';
+}
+
+window.showUserDetails = function (userId) {
+    document.getElementById('users').style.display = 'none';
+    document.getElementById('userDetails').style.display = 'none';
+    document.getElementById('userDetails').style.display = 'block';
+    document.getElementById('selectedUser').innerText = 'User: ' + userId;
+
+}
+
 window.submitForm = function () {
+    const outputContainer = document.getElementById('outputContainer');
+    outputContainer.style.display = 'block';
+    outputContainer.innerHTML = 'Running.... <br>';
+
     if (document.getElementById("noAutoUpdates").checked) {
         try{
             DisableWindowsUpdates()
-            .then(() => {
-                // Handle success
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Disabled Windows Auto Updates<br>';
-                messageElement.classList.remove('error'); // Remove any previous error class
-                messageElement.classList.add('success'); // Add success class
+            .then((message,err) => {
+                outputContainer.innerHTML += message + err + '<br>';
+                outputContainer.classList.remove('error'); // Remove any previous error class
+                outputContainer.classList.add('success'); // Add success class
             })
             .catch((err) => {
-                // Handle errors
                 console.error('Error disabling Windows Auto Updates', err);
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Error disabling Windows Auto Updates. Please try again.<br>';
-                messageElement.classList.remove('success'); // Remove any previous success class
-                messageElement.classList.add('error'); // Add error class
+                outputContainer.innerHTML += 'Error disabling Windows Updates'+' '+err+'<br>';
+                outputContainer.classList.remove('success'); // Remove any previous success class
+                outputContainer.classList.add('error'); // Add error class
             });
         } catch (err) {
-            // Handle unexpected errors
             console.error('An unexpected error occurred:', err);
-            const messageElement = document.getElementById('message');
-            messageElement.textContent = 'An unexpected error occurred. Please try again.';
-            messageElement.classList.remove('success', 'error'); // Remove any previous classes
+            outputContainer.innerHTML += 'An unexpected error occurred:'+' '+err+'<br>';
+            outputContainer.classList.remove('success', 'error'); // Remove any previous classes
         }
     }
     if (document.getElementById("disableCmd").checked) {
         try{
             DisableCmd()
-            .then(() => {
-                // Handle success
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Access to CMD disabled successfully.<br>';
-                messageElement.classList.remove('error'); // Remove any previous error class
-                messageElement.classList.add('success'); // Add success class
+            .then((mess,err) => {
+                outputContainer.innerHTML += mess+' '+err+'<br>';
+                outputContainer.classList.remove('error'); // Remove any previous error class
+                outputContainer.classList.add('success'); // Add success class
             })
             .catch((err) => {
-                // Handle errors
                 console.error('Error disabling access to CMD:', err);
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Error disabling access to CMD. Please try again.<br>';
-                messageElement.classList.remove('success'); // Remove any previous success class
-                messageElement.classList.add('error'); // Add error class
+                outputContainer.innerHTML += 'Error disabling access to CMD'+' '+err+'<br>';
+                outputContainer.classList.remove('success'); // Remove any previous success class
+                outputContainer.classList.add('error'); // Add error class
             });
         } catch (err) {
-            // Handle unexpected errors
             console.error('An unexpected error occurred:', err);
-            const messageElement = document.getElementById('message');
-            messageElement.textContent = 'An unexpected error occurred. Please try again.';
-            messageElement.classList.remove('success', 'error'); // Remove any previous classes
+            outputContainer.innerHTML += 'An unexpected error occurred:'+' '+err+'<br>';
+            outputContainer.classList.remove('success', 'error'); // Remove any previous classes
         }
     }
     if (document.getElementById("disableDownloads").checked) {
         try{
             DisableDownloads()
-            .then(() => {
-                // Handle success
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Downloads in Chrome and Edge disabled successfully.<br>';
-                messageElement.classList.remove('error'); // Remove any previous error class
-                messageElement.classList.add('success'); // Add success class
+            .then((mess,err) => {
+                outputContainer.innerHTML += mess+' '+err+'<br>';
+                outputContainer.classList.remove('error'); // Remove any previous error class
+                outputContainer.classList.add('success'); // Add success class
             })
             .catch((err) => {
-                // Handle errors
                 console.error('Error disabling downloads:', err);
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Error disabling downloads. Please try again.<br>';
-                messageElement.classList.remove('success'); // Remove any previous success class
-                messageElement.classList.add('error'); // Add error class
+                outputContainer.innerHTML += 'Error disabling downloads'+' '+err+'<br>';
+                outputContainer.classList.remove('success'); // Remove any previous success class
+                outputContainer.classList.add('error'); // Add error class
             });
         } catch (err) {
-            // Handle unexpected errors
             console.error('An unexpected error occurred:', err);
-            const messageElement = document.getElementById('message');
-            messageElement.textContent = 'An unexpected error occurred. Please try again.';
-            messageElement.classList.remove('success', 'error'); // Remove any previous classes
+            outputContainer.innerHTML += 'An unexpected error occurred:'+' '+err+'<br>';
+            outputContainer.classList.remove('success', 'error'); // Remove any previous classes
         }
     }
     if (document.getElementById("disableFacebook").checked) {
         try{
             DisableFacebook()
-            .then(() => {
-                // Handle success
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Access to Facebook disabled successfully.<br>';
-                messageElement.classList.remove('error'); // Remove any previous error class
-                messageElement.classList.add('success'); // Add success class
+            .then((mess,err) => {
+                outputContainer.innerHTML += mess+' '+err+'<br>';
+                outputContainer.classList.remove('error'); // Remove any previous error class
+                outputContainer.classList.add('success'); // Add success class
             })
             .catch((err) => {
-                // Handle errors
                 console.error('Error disabling access to Facebook:', err);
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Error disabling access to Facebook. Please try again.<br>';
-                messageElement.classList.remove('success'); // Remove any previous success class
-                messageElement.classList.add('error'); // Add error class
+                outputContainer.innerHTML += 'Error disabling access to Facebook'+' '+err+'<br>';
+                outputContainer.classList.remove('success'); // Remove any previous success class
+                outputContainer.classList.add('error'); // Add error class
             });
         } catch (err) {
-            // Handle unexpected errors
             console.error('An unexpected error occurred:', err);
-            const messageElement = document.getElementById('message');
-            messageElement.textContent = 'An unexpected error occurred. Please try again.';
-            messageElement.classList.remove('success', 'error'); // Remove any previous classes
+            outputContainer.innerHTML += 'An unexpected error occurred:'+' '+err+'<br>';
+            outputContainer.classList.remove('success', 'error'); // Remove any previous classes
         }
     }
     if (document.getElementById("changeScreenTimeout").checked) {
         try{
             ChangeScreenTimeout()
-            .then(() => {
-                // Handle success
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Changed timeout to 3 minutes successfully.<br>';
-                messageElement.classList.remove('error'); // Remove any previous error class
-                messageElement.classList.add('success'); // Add success class
+            .then((mess,err) => {
+                outputContainer.innerHTML += mess+' '+err+'<br>';
+                outputContainer.classList.remove('error'); // Remove any previous error class
+                outputContainer.classList.add('success'); // Add success class
             })
             .catch((err) => {
-                // Handle errors
                 console.error('Error changing timeout:', err);
-                const messageElement = document.getElementById('message');
-                messageElement.textContent += 'Error Changing timeout. Please try again.<br>';
-                messageElement.classList.remove('success'); // Remove any previous success class
-                messageElement.classList.add('error'); // Add error class
+                outputContainer.innerHTML += 'Error Changing timeout'+' '+err+'<br>';
+                outputContainer.classList.remove('success'); // Remove any previous success class
+                outputContainer.classList.add('error'); // Add error class
             });
         } catch (err) {
-            // Handle unexpected errors
             console.error('An unexpected error occurred:', err);
-            const messageElement = document.getElementById('message');
-            messageElement.textContent = 'An unexpected error occurred. Please try again.';
-            messageElement.classList.remove('success', 'error'); // Remove any previous classes
+            outputContainer.innerHTML += 'An unexpected error occurred:'+' '+err+'<br>';
+            outputContainer.classList.remove('success', 'error'); // Remove any previous classes
         }
 
     }
