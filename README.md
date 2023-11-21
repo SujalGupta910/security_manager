@@ -1,19 +1,19 @@
 # README
 
 ## About
-
-This is the official Wails Vanilla template.
-
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
-
-## Live Development
-
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
-
+SecureU Internship Assignment
 ## Building
-
-To build a redistributable, production mode package, use `wails build`.
+Open the project directory in cmd and run the command `wails build ; .\build\bin\security_manager.exe`. An admin prompt window will pop up, click on yes.
+Once the app is open, click on Users > User Icon Image
+## wails dev
+The application requires admin privileges which is why it can't be run using `wails dev` command.
+To do so, find the wails.exe.manifest file at build\windows and comment out the following code like this:
+```
+    <!-- <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+        <security>
+            <requestedPrivileges>
+                <requestedExecutionLevel level="requireAdministrator" uiAccess="false"/>
+            </requestedPrivileges>
+        </security>
+    </trustInfo> -->
+```
