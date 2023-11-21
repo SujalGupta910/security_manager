@@ -1,9 +1,12 @@
 # README
 
 ## About
-SecureU Internship Assignment
-## Building
-Open the project directory in cmd and run the command `wails build ; .\build\bin\security_manager.exe`. An admin prompt window will pop up, click on yes.
+SecureU(OPC) Pvt Ltd Internship Assignment
+## Running
+Locate the security_manager.msi file and download it.
+Once downloaded, run it.
+Locate the security_manager shortcut on the desktop and double click on it.
+Grant the required admin rights, as the app changes registry keys.
 Once the app is open, click on Users > User Icon Image
 ## wails dev
 The application requires admin privileges which is why it can't be run using `wails dev` command.
@@ -17,3 +20,5 @@ To do so, find the wails.exe.manifest file at build\windows and comment out the 
         </security>
     </trustInfo> -->
 ```
+## Building
+`wails build`
