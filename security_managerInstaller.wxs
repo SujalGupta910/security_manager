@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Product Id="*" UpgradeCode="9f029586-8e0c-483a-b587-2f982b5d4213" Version="1.0.0.0" Language="1033" Name="security_manager" Manufacturer="SujalGupta">
+        <Package InstallerVersion="300" Compressed="yes"/>
+        <Media Id="1" Cabinet="security_manager.cab" EmbedCab="yes" />
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="APPLICATIONROOTDIRECTORY" Name="SECUREU"/>
+            </Directory>
+            <!-- Step 1: Define the directory structure -->
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ApplicationProgramsFolder" Name="SECUREU"/>
+            </Directory>
+            <!-- Step 1a: Define the Desktop directory -->
+            <Directory Id="DesktopFolder" Name="Desktop"/>
+        </Directory>
+
+        <DirectoryRef Id="APPLICATIONROOTDIRECTORY">
+            <Component Id="security_manager.exe" Guid="96df53e5-b38f-4d9e-8cad-9d22f0839394">
+                <File Id="security_manager.exe" Source="E:\ProjectsSourceCode\Wails_Go\security_manager\build\bin\security_manager.exe" KeyPath="yes" Checksum="yes"/>
+            </Component>
+            <Component Id="SetPath" Guid="04b7fa74-7de6-471e-8faa-86e9c0f076aa">
+                <Environment Id="AddPath" Action="set" Part="last" Name="PATH" Permanent="no" System="yes" Value="[APPLICATIONROOTDIRECTORY]" />
+            </Component>
+        </DirectoryRef>
+
+        <!-- Step 2: Add the shortcut to your installer package -->
+        <DirectoryRef Id="ApplicationProgramsFolder">
+            <Component Id="ApplicationShortcut" Guid="dadd87d0-bfb1-449c-8474-d0461870936a">
+                <Shortcut Id="ApplicationStartMenuShortcut"
+                          Name="security_manager"
+                          Description="SECUREU Assignment"
+                          Target="[#security_manager.exe]"
+                          WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+                <RegistryValue Root="HKCU" Key="Software\SujalGupta\security_manager" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+        <!-- Step 2a: Add the shortcut to the Desktop -->
+        <DirectoryRef Id="DesktopFolder">
+            <Component Id="DesktopShortcut" Guid="70a15e47-72e1-4b0c-82ff-78c10f7df2c4">
+                <Shortcut Id="DesktopShortcut"
+                          Name="security_manager"
+                          Description="SECUREU Assignment"
+                          Target="[#security_manager.exe]"
+                          WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+                <RemoveFolder Id="DesktopFolder" On="uninstall"/>
+                <RegistryValue Root="HKCU" Key="Software\SujalGupta\security_manager" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+            </Component>
+        </DirectoryRef>
+
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="ControlPanelComponent" Guid="6d5dbb35-211e-4195-a904-c15e1ed89326">
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\security_manager" Name="DisplayName" Value="security_manager" Type="string" />
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\security_manager" Name="UninstallString" Value="[SystemFolder]msiexec.exe /x [ProductCode]" Type="string" />
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\security_manager" Name="InstallLocation" Value="[INSTALLDIR]" Type="string" />
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\security_manager" Name="DisplayIcon" Value="[INSTALLDIR]security_manager.exe" Type="string" />
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\security_manager" Name="Publisher" Value="SujalGupta" Type="string" />
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\security_manager" Name="Version" Value="1.0.0.0" Type="string" />
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\security_manager" Name="NoModify" Value="1" Type="integer" />
+                <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\security_manager" Name="NoRepair" Value="1" Type="integer" />
+                <RemoveFolder Id="TARGETDIR" On="uninstall" />
+            </Component>
+        </DirectoryRef>
+
+        <Feature Id="MainApplication" Title="Main Application" Level="1">
+            <ComponentRef Id="security_manager.exe" />
+            <ComponentRef Id="ApplicationShortcut" />   
+            <ComponentRef Id="DesktopShortcut" />
+            <ComponentRef Id="SetPath"/>
+        </Feature>
+    </Product>
+</Wix>
